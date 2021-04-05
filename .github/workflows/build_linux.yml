@@ -15,7 +15,7 @@ jobs:
         with:
           repository: j4qfrost/wolfssl
       - name: Setup wolfssl
-        run: ./autogen.sh && ./configure --enable-keygen --enable-cryptonly --enable-ssh && make && make check && make install
+        run: ./autogen.sh && ./configure --enable-keygen --enable-cryptonly --enable-ssh && make && make check && sudo make install
 
       - uses: actions/checkout@v2
       - name: autogen
