@@ -25,7 +25,7 @@ jobs:
           arch: x64
 
       - name: Upgrade Project
-        run: devenv /Upgrade
+        run: devenv ide/winvs/wolfssh.sln /Upgrade
 
       - name: Build Project
         run: devenv ide/winvs/wolfssh.sln /Build Release
