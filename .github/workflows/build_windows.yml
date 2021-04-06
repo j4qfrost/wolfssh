@@ -30,6 +30,9 @@ jobs:
       - name: Upgrade Project
         run: devenv ide/winvs/wolfssh.sln /Upgrade
 
+      - name: Replace wolfssl user_settings.h
+        run: replace ide/winvs/user_setting.h ../wolfssl/IDE/WIN/user_settings.h
+
       - name: Build Project
         run: devenv ide/winvs/wolfssh.sln /Build "${{env.BUILD_CONFIGURATION}}"
 
