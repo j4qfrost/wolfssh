@@ -28,7 +28,7 @@ jobs:
         run: devenv /Upgrade
 
       - name: Build Project
-        run: devenv /Build Release
+        run: devenv ide/winvs/wolfssh.sln /Build Release
 
       - uses: actions/upload-artifact@v2
         with:
