@@ -25,10 +25,10 @@ jobs:
           arch: x64
 
       - name: Upgrade Project
-        run: devenv wolfssl64.sln /Upgrade
+        run: devenv /Upgrade
 
       - name: Build Project
-        run: devenv wolfssl64.sln /Build Release
+        run: devenv /Build Release
 
       - uses: actions/upload-artifact@v2
         with:
