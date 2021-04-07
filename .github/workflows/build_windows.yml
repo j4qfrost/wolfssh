@@ -24,8 +24,8 @@ jobs:
       - name: Get wolfssl
         run: git clone https://github.com/j4qfrost/wolfssl.git ../wolfssl
 
-      - name: Replace wolfssl user_settings.h
-        run: copy ide/winvs/user_setting.h ../wolfssl/IDE/WIN/user_settings.h
+      # - name: Replace wolfssl user_settings.h
+      #   run: copy ide/winvs/user_setting.h ../wolfssl/IDE/WIN/user_settings.h
 
       - name: Dir check
         run: dir .
