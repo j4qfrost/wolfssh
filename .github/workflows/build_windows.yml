@@ -24,13 +24,12 @@ jobs:
       - name: Get wolfssl
         run: git clone https://github.com/j4qfrost/wolfssl.git ../wolfssl
 
-      - name: Upgrade Project
-        run: devenv wolfssl64.sln /Upgrade
+      - name: Build wolfssl
+        run: devenv wolfssl64.sln /Upgrade; devenv wolfssl64.sln /Build Release
         working-directory: ../wolfssl
 
-      - name: Build Project
-        run: devenv wolfssl64.sln /Build Release
-        working-directory: ../wolfssl
+      - name: Copy wolfssl lib
+        run: copy ../wolfssl/Release/wolfssl.lib .
 
       - name: Upgrade Project
         run: devenv ide/winvs/wolfssh.sln /Upgrade
