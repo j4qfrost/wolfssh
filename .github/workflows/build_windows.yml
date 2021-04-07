@@ -27,8 +27,8 @@ jobs:
       - name: Copy user_settings.h
         run: copy ide\winvs\user_settings.h ..\wolfssl\IDE\WIN\user_settings.h
 
-      - name: Build wolfssl
-        run: devenv wolfssl64.sln /Upgrade; devenv wolfssl64.sln /Build Release
+      - name: Upgrade wolfssl
+        run: devenv wolfssl64.sln /Upgrade
         working-directory: ../wolfssl
 
       - name: Upgrade Project
