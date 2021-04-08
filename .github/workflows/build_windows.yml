@@ -35,10 +35,11 @@ jobs:
         run: devenv ide/winvs/wolfssh.sln /Upgrade
 
       - name: Build Project
-        run: devenv ide/winvs/wolfssh.sln /Build "${{env.BUILD_CONFIGURATION}}" /Project wolfssh
+        run: devenv wolfssh.sln /Build "${{env.BUILD_CONFIGURATION}}" /Project wolfssh
+        working-directory: ide/winvs
 
       - uses: actions/upload-artifact@v2
         with:
           name: wolfssh-windows64
-          path: Release/
+          path: ide/winvs/Release/
           if-no-files-found: error
