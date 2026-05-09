@@ -11,24 +11,65 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      - uses: actions/checkout@v2
-        with:
-          repository: j4qfrost/wolfssl
-      - name: Setup wolfssl
-        run: brew install automake && ./autogen.sh && ./configure --enable-keygen --enable-cryptonly --enable-ssh && make && make check && make install
+      - name: Install build prerequisites
+        run: brew install automake libtool
 
-      - uses: actions/checkout@v2
+      - name: Checkout, build, and install wolfssl
+        # Use the canonical wolfSSL composite action — same one OS Check
+        # uses on macos-latest with v5.9.1-stable, so we get a known-
+        # green baseline instead of an open-coded chain that's broken
+        # for unrelated reasons on this runner image.
+        uses: wolfSSL/actions-build-autotools-project@v1
+        with:
+          repository: wolfssl/wolfssl
+          ref: v5.9.1-stable
+          path: wolfssl
+          configure: --enable-all
+          check: false
+          install: true
+
+      - uses: actions/checkout@v4
+        with:
+          path: wolfssh
+      - name: Inspect wolfssl install layout
+        if: always()
+        run: |
+          echo "--- workspace ---"
+          ls -la "${{ github.workspace }}" || true
+          echo "--- build-dir ---"
+          ls -la "${{ github.workspace }}/build-dir" || true
+          echo "--- build-dir/lib ---"
+          ls -la "${{ github.workspace }}/build-dir/lib" 2>/dev/null || true
+          echo "--- build-dir/include ---"
+          ls -la "${{ github.workspace }}/build-dir/include" 2>/dev/null || true
+          echo "--- /usr/local/lib/libwolfssl* ---"
+          ls -la /usr/local/lib/libwolfssl* 2>/dev/null || echo "(none)"
+          echo "--- /opt/homebrew/lib/libwolfssl* ---"
+          ls -la /opt/homebrew/lib/libwolfssl* 2>/dev/null || echo "(none)"
       - name: autogen
+        working-directory: ./wolfssh
         run: ./autogen.sh
       - name: configure
-        run: ./configure
+        working-directory: ./wolfssh
+        run: ./configure LDFLAGS="-L${{ github.workspace }}/build-dir/lib" CPPFLAGS="-I${{ github.workspace }}/build-dir/include"
+      - name: Show config.log on configure failure
+        if: failure()
+        working-directory: ./wolfssh
+        run: tail -200 config.log || true
       - name: make
+        working-directory: ./wolfssh
         run: make
       - name: make check
+        working-directory: ./wolfssh
         run: make check
+        env:
+          DYLD_LIBRARY_PATH: ${{ github.workspace }}/build-dir/lib
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: wolfssh-macos
-          path: src/.libs/
-          if-no-files-found: error
+          path: |
+            wolfssh/src/.libs/
+            wolfssh/src/libwolfssh*.la
+          if-no-files-found: warn
