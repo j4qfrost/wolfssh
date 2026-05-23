@@ -1,0 +1,19 @@
+[project]
+name = "dawarich-mcp"
+version = "0.1.0"
+description = "MCP server exposing a self-hosted Dawarich instance to Claude"
+requires-python = ">=3.11"
+dependencies = [
+    "mcp>=1.2.0",
+    "httpx>=0.27",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["dawarich_mcp"]
+
+[project.scripts]
+dawarich-mcp = "dawarich_mcp.__main__:main"
